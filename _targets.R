@@ -1,7 +1,7 @@
 library(targets)
 
 tar_option_set(
-  packages = c("dplyr", "flextable", "tibble", "wallis"),
+  packages = c("dplyr", "flextable", "ggplot2", "tibble", "wallis"),
     format = "rds"
 )
 
@@ -40,7 +40,21 @@ list(
     }
   ),
   tar_target(
+    name = results_plot,
+    command = {
+      ggplot(results, aes(n, volume)) +
+        geom_point(shape = 4) +
+        theme_bw() +
+        xlim(10, 23) +
+        ylim(0.6, 0.9)
+    }
+  ),
+  tar_target(
     name = save_table_as_png,
     command = save_as_image(summary_results_as_flextable, path = "png/summary-results.png")
+  ),
+  tar_target(
+    name = save_results_plot,
+    command = ggsave(plot = results_plot, filename = "png/results-plot.png", width = 1000, height = 800, units = "px")
   )
 )
