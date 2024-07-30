@@ -5,15 +5,24 @@ tar_option_set(
     format = "rds"
 )
 
-tar_source()
+tar_source() 
 
 list(
   tar_target(orders, seq(10, 50, 2)),
   tar_target(seeds, 42:46),
   tar_target(
-       name = results,
-    command = random_room(orders, seeds),
+       name = results_1,
+    command = random_room_1(orders, seeds),
     pattern = cross(orders, seeds)
+  ),
+  tar_target(
+       name = results_2,
+    command = random_room_2(orders, seeds),
+    pattern = cross(orders, seeds)
+  ),
+  tar_target(
+    name = results,
+    command = bind_rows(results_1 |> mutate(algo = 1), results_2 |> mutate(algo = 2))
   ),
   tar_target(
     name = summary_results,
@@ -43,10 +52,12 @@ list(
     name = results_plot,
     command = {
       ggplot(results, aes(n, volume)) +
-        geom_point(shape = 4, alpha = 0.5, colour = "blue") +
+        geom_point(aes(colour = as.factor(algo)), shape = 4, alpha = 0.5) +
         theme_bw() +
         scale_x_continuous(labels = comma) +
-        ylim(0.6, 0.9)
+        ylim(0.4, 0.9) +
+        theme(legend.title = element_blank()) +
+        geom_function(fun = function(n) (n^2/4 - n/2)/((n^2 - n)/2), colour = "red")
     }
   ),
   tar_target(
