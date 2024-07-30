@@ -1,14 +1,14 @@
 library(targets)
 
 tar_option_set(
-  packages = c("dplyr", "flextable", "ggplot2", "tibble", "wallis"),
+  packages = c("dplyr", "flextable", "ggplot2", "scales", "tibble", "wallis"),
     format = "rds"
 )
 
 tar_source()
 
 list(
-  tar_target(orders, seq(10, 22, 2)),
+  tar_target(orders, seq(10, 50, 2)),
   tar_target(seeds, 42:46),
   tar_target(
        name = results,
@@ -43,9 +43,9 @@ list(
     name = results_plot,
     command = {
       ggplot(results, aes(n, volume)) +
-        geom_point(shape = 4) +
+        geom_point(shape = 4, alpha = 0.5, colour = "blue") +
         theme_bw() +
-        xlim(10, 23) +
+        scale_x_continuous(labels = comma) +
         ylim(0.6, 0.9)
     }
   ),
@@ -55,6 +55,6 @@ list(
   ),
   tar_target(
     name = save_results_plot,
-    command = ggsave(plot = results_plot, filename = "png/results-plot.png", width = 1000, height = 800, units = "px")
+    command = ggsave(plot = results_plot, filename = "png/results-plot.png", width = 1200, height = 800, units = "px")
   )
 )
