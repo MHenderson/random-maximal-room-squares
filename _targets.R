@@ -8,7 +8,7 @@ tar_option_set(
 tar_source() 
 
 list(
-  tar_target(orders, seq(10, 50, 2)),
+  tar_target(orders, seq(10, 60, 2)),
   tar_target(seeds, 42:46),
   tar_target(
        name = results_1,
@@ -52,10 +52,10 @@ list(
     name = results_plot,
     command = {
       ggplot(results, aes(n, volume)) +
-        geom_point(aes(colour = as.factor(algo)), shape = 4, alpha = 0.5) +
+        geom_point(aes(colour = as.factor(algo)), alpha = 0.3, size = 0.1) +
         theme_bw() +
         scale_x_continuous(labels = comma) +
-        ylim(0.4, 0.9) +
+        ylim(0.4, 1) +
         theme(legend.title = element_blank()) +
         geom_function(fun = function(n) (n^2/4 - n/2)/((n^2 - n)/2), colour = "red")
     }
