@@ -8,7 +8,7 @@ tar_option_set(
 tar_source() 
 
 list(
-  tar_target(orders, seq(10, 70, 2)),
+  tar_target(orders, seq(10, 72, 2)),
   tar_target(seeds, 42:46),
   tar_target(
        name = results_1,
